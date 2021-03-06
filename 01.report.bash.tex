@@ -1,0 +1,75 @@
+\documentclass{article}
+
+\begin{document}
+
+	\section{List everyone logged in}
+	\begin{verbatim}
+
+	[hieplnc@thinkpadolv1 ~]$ who
+hieplnc  tty7         2021-03-05 18:18 (:0)
+
+	\end{verbatim}
+
+	\section{List all process that are running}
+	\begin{verbatim}
+	[hieplnc@thinkpadolv1 ~/Desktop]$ ps aux | head -n10
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.0 171020  5196 ?        Ss   Mar05   0:01 /sbin/init
+root           2  0.0  0.0      0     0 ?        S    Mar05   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        I<   Mar05   0:00 [rcu_gp]
+root           4  0.0  0.0      0     0 ?        I<   Mar05   0:00 [rcu_par_gp]
+root           6  0.0  0.0      0     0 ?        I<   Mar05   0:00 [kworker/0:0H-kblockd]
+root           8  0.0  0.0      0     0 ?        I<   Mar05   0:00 [mm_percpu_wq]
+root           9  0.0  0.0      0     0 ?        S    Mar05   0:00 [ksoftirqd/0]
+root          10  0.0  0.0      0     0 ?        I    Mar05   0:04 [rcu_sched]
+root          11  0.0  0.0      0     0 ?        S    Mar05   0:00 [migration/0]
+	\end{verbatim}
+
+	\section{List everyone who is logged on sorted by their username}
+	\begin{verbatim}
+	[hieplnc@thinkpadolv1 ~]$ last | awk '{print $1}' | sort | head -n 10
+
+hieplnc
+hieplnc
+hieplnc
+hieplnc
+hieplnc
+hieplnc
+hieplnc
+hieplnc
+hieplnc
+	\end{verbatim}
+
+
+	\section{Count number of session ech logger in user, sorted by this number in descending order}
+	\begin{verbatim}
+	[hieplnc@thinkpadolv1 ~]$ last | awk '{print $1}' | sort | \
+	uniq -c | awk '{print $1}' | sort -r
+175
+167
+12
+1
+1
+	\end{verbatim}
+
+	\section{Show content of the first and last 3 lines of file /etc/fstab}
+	\begin{verbatim}
+	[hieplnc@thinkpadolv1 ~/Desktop]$ (\
+	(echo "===HEAD===" && head -n3 && echo "==========") && \
+	echo "" && \
+	(echo "===TAIL===" && tail -n3 && echo "==========") \
+	) < /etc/fstab
+
+===HEAD===
+# UUID=53b8adab-a73a-40ab-869d-177f35d388bb
+/dev/nvme0n1p3      	/         	ext4      	rw,relatime	0 1
+
+==========
+
+===TAIL===
+# UUID=fba177f7-cddc-4686-9c58-878ea6839a9c
+/dev/nvme0n1p2      	none      	swap      	defaults  	0 0
+
+==========
+	\end{verbatim}
+\end{document}
