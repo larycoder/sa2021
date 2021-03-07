@@ -72,4 +72,39 @@ hieplnc
 
 ==========
 	\end{verbatim}
+
+	\section{retrieve line number 5 to 10 from the file "/etc/fstab" and write to file "extract.txt"}
+	\begin{verbatim}
+[hieplnc@thinkpadolv1 ~/Desktop]$ cat /etc/fstab | head -n10 | tail -n5 > extract.txt
+[hieplnc@thinkpadolv1 ~/Desktop]$ cat extract.txt
+
+# UUID=ac34064d-8a63-4cc8-9cba-2008226031d0
+/dev/sda1           	/home     	ext4      	rw,relatime	0 2
+
+# UUID=4348-62BA
+	\end{verbatim}
+
+	\section{list all files in current directory, recursively, to which the user has full permissions}
+	\begin{verbatim}
+	[hieplnc@thinkpadolv1 ~/Desktop/Note]$ find . | head -n10
+.
+./My_weak.txt
+./Love_Plan.txt
+./draft.txt
+./MyIdea.txt
+./MyKnowledge.txt
+./Current_State.txt
+./archive
+./archive/Note_pattern.txt
+./archive/Capstone_diary.txt
+	\end{verbatim}
+
+	\section{Compare 2 files and show percentage of similarities between them}
+	\begin{verbatim}
+[hieplnc@thinkpadolv1 ~/Desktop/test]$ diff -u test1.txt test2.txt | \
+tail -n +4 | \
+grep -e "^+" | \
+wc -l
+2
+	\end{verbatim}
 \end{document}
