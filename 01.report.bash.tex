@@ -101,10 +101,14 @@ hieplnc
 
 	\section{Compare 2 files and show percentage of similarities between them}
 	\begin{verbatim}
-[hieplnc@thinkpadolv1 ~/Desktop/test]$ diff -u test1.txt test2.txt | \
-tail -n +4 | \
-grep -e "^+" | \
-wc -l
-2
+	[hieplnc@thinkpadolv1 ~/Desktop/test]$ add=$(diff -u test1.txt test2.txt | \
+	tail -n +4 | \
+	grep "^+" | wc -l)
+[hieplnc@thinkpadolv1 ~/Desktop/test]$ firstcount=$(cat test1.txt | wc -l)
+[hieplnc@thinkpadolv1 ~/Desktop/test]$ secondcount=$(cat test2.txt | wc -l)
+[hieplnc@thinkpadolv1 ~/Desktop/test]$ percent=\
+$((($secondcount - $add)*100 / ($firstcount)))
+[hieplnc@thinkpadolv1 ~/Desktop/test]$ echo $percent
+80
 	\end{verbatim}
 \end{document}
