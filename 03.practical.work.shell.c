@@ -6,35 +6,47 @@
 
 #define MAX 1000
 
-char* getArg(void);
-void delArg(char* arg);
+char args_buff[MAX];
+char *args[MAX];
 
+int getArg(void);
 
 int main() {
 	printf("\n****LH Shell****\n");
 	while(1){
 		printf("> ");
-		char *command = getArg();
+		int argc = getArg();
 		int pid = fork();
 		if(pid == 0) { // this is child who execute shell
-			char *args[]= {command, NULL};
-			execvp(command, args);
+			execvp(args[0], args);
 		} 
 		else { // this is parent who wait for next comment
 			wait(&pid);
-			delArg(command);
 		}
 	}
 	return 0;
 }
 
-char* getArg(void){
-	char buff[MAX];
-	char *arg = (char*) malloc(sizeof(char) * MAX);
-	scanf("%s", arg);
-	return arg;
+int getArg(void){
+	// clean buff
+	memset(args_buff, '\0', MAX);
+	memset(args, 0, MAX);
+
+	// build buff
+	gets(args_buff);
+	
+	// cut string
+	char pre = ' ';
+	int index = 0;
+	int len = strlen(args_buff);
+	for(int i=0; i<len; i++){
+		if(args_buff[i] != ' ' && pre == ' ') { // detect arg
+			args[index++] = &args_buff[i];
+		}
+		pre = args_buff[i]; // record previous char
+		if(args_buff[i] == ' ') args_buff[i] = '\0'; // cut string
+	}
+	args[index] = NULL;
+	return index;
 }
 
-void delArg(char* arg){
-	free(arg);
-}
