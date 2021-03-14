@@ -76,8 +76,11 @@ int sendSignal(int pid, int signal){
 
 
 void handler(int signal){
-	if(globalPid == 0 && signal != SIGINT) sendSignal(globalPid, signal);
-
+	if(globalPid == 0 && signal != SIGINT) {
+		sendSignal(globalPid, signal);
+		return;
+	}
+	
 	printf("[ SIGNAL %d ] ", signal);
 	switch(signal){
 		case SIGTSTP:
