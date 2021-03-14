@@ -34,7 +34,7 @@ int main() {
 	// program running
 	printf("\n****LH Shell****\n");
 	while(1){
-		printf("> ");
+		if(pipeFlag == 0) printf("> ");
 		int argc = getArg();
 		
 		// support pipe
@@ -46,7 +46,7 @@ int main() {
 		if(pid == 0) { // this is child who execute shell			   
 			// pipe support
 			if(pipeFlag == 1){
-				dup2(pipe_buff[0], 1);
+				dup2(pipe_buff[1], 1);
 				close(pipe_buff[0]);
 				close(pipe_buff[1]);
 			}
@@ -61,8 +61,8 @@ int main() {
 		else { // this is parent who wait for next comment
 			wait(&pid); // wait for process done
 			
-			if(pipeFlag == 1) close(pipe_buff[0]);
-			if(pipeFlag == 1) prePipe = pipe_buff[1];
+			if(pipeFlag == 1) close(pipe_buff[1]);
+			if(pipeFlag == 1) prePipe = pipe_buff[0];
 			else{
 				if(prePipe >= 0) close(prePipe);
 				prePipe = -1;
@@ -83,14 +83,13 @@ int getArg(void){
 		fgets(args_buff, MAX, stdin);
 		len = strlen(args_buff);
 		cursor = 0;
-		printf("debug: %d %d\n", cursor, len);
 	}
 	
 	// cut string
 	char pre = ' ';
 	int index = 0;
 	while(cursor < len){
-		if(args_buff[cursor] != ' ' && pre == ' ') { // detect arg
+		if((args_buff[cursor] != ' ' && args_buff[cursor] != '|') && pre == ' ') { // detect arg
 			args[index++] = &args_buff[cursor];
 		}
 		pre = args_buff[cursor]; // record previous char
@@ -98,7 +97,7 @@ int getArg(void){
 		if(args_buff[cursor] == ' ' || args_buff[cursor] == '\n' || args_buff[cursor] == '\r')
 			args_buff[cursor] = '\0'; // cut string
 
-		if(args_buff[cursor] == '|' && pre == ' '){ // pipe support
+		if(args_buff[cursor] == '|'){ // pipe support
 			args_buff[cursor++] = '\0';
 			pipeFlag = 1;
 			args[index] = NULL;
