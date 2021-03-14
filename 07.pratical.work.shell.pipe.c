@@ -61,7 +61,7 @@ int main() {
 		else { // this is parent who wait for next comment
 			wait(&pid); // wait for process done
 			
-			close(pipe_buff[0]);
+			if(pipeFlag == 1) close(pipe_buff[0]);
 			if(pipeFlag == 1) prePipe = pipe_buff[1];
 			else{
 				if(prePipe >= 0) close(prePipe);
@@ -78,12 +78,12 @@ int getArg(void){
 	memset(args, 0, MAX);
 
 	// build buff
-	if(cursor == len || len == 0){
+	if(cursor == len){
 		memset(args_buff, '\0', MAX);
 		fgets(args_buff, MAX, stdin);
 		len = strlen(args_buff);
-		printf("debug: %d %d\n", cursor, len);
 		cursor = 0;
+		printf("debug: %d %d\n", cursor, len);
 	}
 	
 	// cut string
@@ -95,7 +95,8 @@ int getArg(void){
 		}
 		pre = args_buff[cursor]; // record previous char
 
-		if(args_buff[cursor] == ' ') args_buff[cursor] = '\0'; // cut string
+		if(args_buff[cursor] == ' ' || args_buff[cursor] == '\n' || args_buff[cursor] == '\r')
+			args_buff[cursor] = '\0'; // cut string
 
 		if(args_buff[cursor] == '|' && pre == ' '){ // pipe support
 			args_buff[cursor++] = '\0';
