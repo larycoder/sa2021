@@ -76,7 +76,7 @@ int sendSignal(int pid, int signal){
 
 
 void handler(int signal){
-	if(globalPid == 0 && signal != SIGINT) {
+	if(globalPid != 0 && signal != SIGINT) {
 		sendSignal(globalPid, signal);
 		return;
 	}
